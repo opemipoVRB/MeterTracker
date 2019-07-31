@@ -31,7 +31,7 @@ class UserProfileManager(BaseUserManager):
         if not email:
             raise ValueError('Provide an email address for user.')
 
-        email = self.normalize_email()
+        email = self.normalize_email(email)
 
         user = self.model(email=email, first_name=first_name, last_name=last_name)
 
@@ -50,7 +50,7 @@ class UserProfileManager(BaseUserManager):
         :return:
         """
 
-        user = self.create_user(email, first_name, last_name)
+        user = self.create_user(email, first_name, last_name, password)
 
         user.is_superuser = True
         user.is_staff = True
@@ -78,7 +78,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
     objects = UserProfileManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['name']
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     def get_full_name(self):
         """
@@ -110,14 +110,16 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
 class Plant(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=255, blank=False)
+    name = models.CharField(max_length=10, blank=False)
 
 
 class Datapoint(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     plant_id = models.ForeignKey(Plant, on_delete=models.CASCADE)
-    energy_expected = models.DecimalField()
-    energy_observed = models.DecimalField()
-    irradiation_expected = models.DecimalField()
-    irradiation_observed = models.DecimalField()
+    energy_expected = models.FloatField()
+    energy_observed = models.FloatField()
+    irradiation_expected = models.FloatField()
+    irradiation_observed = models.FloatField()
+
+
 
