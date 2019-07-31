@@ -52,7 +52,7 @@ class PlantsViewTestCase(TestCase):
         self.client = APIClient()
         self.plant = {'name': 'Alpha Plant'}
         self.response = self.client.post(
-            reverse('create'),
+            reverse('plant-list'),
             self.plant,
             format='json')
 
@@ -66,6 +66,31 @@ class PlantsViewTestCase(TestCase):
 
         self.assertEqual(self.response.status_code, status.HTTP_201_CREATED)
 
+    def test_api_can_get_all_plant(self):
+        """
+
+        Test the API get all plant
+
+        :return:
+
+        """
+        plant = Plant.objects.get()
+
+        response = self.client.get(
+            reverse('plant-list',
+                    ),
+            format='json'
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_200_OK
+        )
+        self.assertContains(
+            response,
+            plant
+        )
+
     def test_api_get_can_a_plant(self):
         """
         Test the api can get a given plant
@@ -76,7 +101,7 @@ class PlantsViewTestCase(TestCase):
         plant = Plant.objects.get()
 
         response = self.client.get(
-            reverse('details',
+            reverse('plant-detail',
                     kwargs={'pk': plant.id}),
             format='json'
         )
@@ -102,7 +127,7 @@ class PlantsViewTestCase(TestCase):
         }
 
         response = self.client.put(
-            reverse('details', kwargs={'pk': plant.id}),
+            reverse('plant-detail', kwargs={'pk': plant.id}),
             plant_update, format='json'
         )
 
@@ -120,7 +145,7 @@ class PlantsViewTestCase(TestCase):
         plant = Plant.objects.get()
 
         response = self.client.delete(
-            reverse('details', kwargs={'pk': plant.id}),
+            reverse('plant-detail', kwargs={'pk': plant.id}),
             format='json',
             follow=True
         )
@@ -129,3 +154,5 @@ class PlantsViewTestCase(TestCase):
             response.status_code,
             status.HTTP_204_NO_CONTENT
         )
+
+

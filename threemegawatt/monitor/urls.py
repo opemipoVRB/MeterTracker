@@ -41,7 +41,7 @@
 ↓↓...........................................................................↓↓
 ↓↓←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←↓↓
 ↓↓→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→↓↓
-↓↓      serializers.py  Created by  Durodola Opemipo 2019                    ↓↓
+↓↓      urls.py  Created by  Durodola Opemipo 2019                           ↓↓
 ↓↓            Personal Email : <opemipodurodola@gmail.com>                   ↓↓
 ↓↓                 Telephone Number: +2348182104309                          ↓↓
 ↓↓→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→↓↓
@@ -49,36 +49,18 @@
 
 """
 
-from rest_framework import serializers
+from django.conf.urls import url, include
+from django.urls import path
 
-from .models import Plant, Datapoint
+from rest_framework.routers import DefaultRouter
 
+from .views import PlantViewSet
 
-class PlantSerializer(serializers.ModelSerializer):
-    """
-        Serializer for Plant Model
+router = DefaultRouter()
 
-    """
+router.register('plants', PlantViewSet, base_name='plant')
 
-    class Meta:
-        model = Plant
+urlpatterns = [
+    path('api/', include(router.urls))
+]
 
-        fields = ('id', 'name',)
-
-
-class DatapointSerializer(serializers.Serializer):
-    """
-    Serializer for datapoint
-
-    """
-
-    class Meta:
-        model = Datapoint
-        fields = (
-            'id',
-            'plant_id',
-            'energy_expected',
-            'energy_observed',
-            'irradiation_expected',
-            'irradiation_observed'
-        )

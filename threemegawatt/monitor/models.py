@@ -110,7 +110,10 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
 class Plant(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=10, blank=False)
+    name = models.CharField(max_length=20, blank=False, unique=True)
+
+    def __str__(self):
+        return self.name
 
 
 class Datapoint(models.Model):
@@ -120,6 +123,3 @@ class Datapoint(models.Model):
     energy_observed = models.FloatField()
     irradiation_expected = models.FloatField()
     irradiation_observed = models.FloatField()
-
-
-
