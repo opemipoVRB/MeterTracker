@@ -1,18 +1,18 @@
- FROM python:3.7-alpine
- MAINTAINER 3megawatt
+FROM python:3.7-alpine
+MAINTAINER 3megawatt
 
- ENV PYTHONUNBUFFERED 1
+ENV PYTHONUNBUFFERED 1
 
- COPY ./requirements.txt /requirements.txt
+COPY ./requirements.txt /requirements.txt
 
- RUN pip install -r /requirements.txt
+RUN pip install -r /requirements.txt
 
- RUN mkdir /threemegawatt
+RUN mkdir /threemegawatt
 
- WORKDIR /threemegawatt
+WORKDIR /threemegawatt
 
- COPY ./threemegawatt /threemegawatt
+COPY ./threemegawatt /threemegawatt
 
- RUN adduser -D user
+RUN adduser -D user
 
- USER user
+USER user

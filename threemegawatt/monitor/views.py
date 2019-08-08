@@ -118,5 +118,6 @@ class PlantDataPoints(ListAPIView):
 
     def get_queryset(self):
         plant = self.kwargs['plant']
-        return DataPoint.objects.filter(plant=plant)
+        return DataPoint.objects.filter(plant=plant)[:10]
+
 
