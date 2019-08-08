@@ -50,8 +50,22 @@
 """
 
 from rest_framework import serializers
+from rest_framework_bulk import BulkListSerializer, BulkSerializerMixin
 
-from .models import Plant, Datapoint
+from .models import Plant, DataPoint
+
+
+class DataSetSerializer(BulkSerializerMixin, serializers.Serializer):
+    plant = serializers.PrimaryKeyRelatedField(queryset=Plant.objects.all())
+    date_from = serializers.DateField()
+    date_to = serializers.DateField()
+
+
+class DataPointSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataPoint
+        list_serializer_class = BulkListSerializer
+        fields = '__all__'
 
 
 class PlantSerializer(serializers.ModelSerializer):
@@ -60,25 +74,11 @@ class PlantSerializer(serializers.ModelSerializer):
 
     """
 
+    # datapoints = DataPointSerializer(many=True, read_only=True)
+
     class Meta:
         model = Plant
 
-        fields = ('id', 'name',)
-
-
-class DatapointSerializer(serializers.Serializer):
-    """
-    Serializer for datapoint
-
-    """
-
-    class Meta:
-        model = Datapoint
-        fields = (
-            'id',
-            'plant_id',
-            'energy_expected',
-            'energy_observed',
-            'irradiation_expected',
-            'irradiation_observed'
-        )
+        # Disabled as it takes too much steps to parse on front end and takes lots of data
+        # fields = ['id', 'name', 'datapoints']
+        fields = ['id', 'name', ]

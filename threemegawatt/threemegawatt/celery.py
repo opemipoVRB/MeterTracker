@@ -41,42 +41,29 @@
 ↓↓...........................................................................↓↓
 ↓↓←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←↓↓
 ↓↓→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→↓↓
-↓↓      urls.py  Created by  Durodola Opemipo 2019                           ↓↓
+↓↓      celery.py.py  Created by  Durodola Opemipo 2019                      ↓↓
 ↓↓            Personal Email : <opemipodurodola@gmail.com>                   ↓↓
 ↓↓                 Telephone Number: +2348182104309                          ↓↓
 ↓↓→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→→↓↓
 ↓↓←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←↓↓
-
 """
 
-from django.conf.urls import url, include
-from django.urls import path
 
-from rest_framework.routers import DefaultRouter
+from _future_ import absolute_import, unicode_literals
+import os
+from celery import Celery
 
-from .views import (
-    PlantCreateView,
-    PlantListView,
-    PlantDetailView,
-    PlantUpdateView,
-    PlantDestroyView,
-    DataSetCreateView,
-    APIRoot,
-    PlantDataPoints
-)
-from rest_framework.routers import SimpleRouter
+# set the default Django settings module for the 'celery' program.
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ab_lotto.settings')
 
-router = SimpleRouter()
+app = Celery('ab_lotto')
 
-urlpatterns = [
-    path('api/', APIRoot.as_view(), name='api-root'),
-    path('api/plants/', PlantListView.as_view(), name='plant-list'),
-    path('api/create/plant/', PlantCreateView.as_view(), name='plant-create'),
-    path('api/plant/<pk>', PlantDetailView.as_view(), name='plant-detail'),
-    path('api/update/plant/<pk>', PlantUpdateView.as_view(), name='plant-update'),
-    path('api/delete/plant/<pk>', PlantDestroyView.as_view(), name='plant-delete'),
-    path('api/datapoint/upload/', DataSetCreateView.as_view(), name='bulk-upload-datapoints'),
-    path('api/report/<plant>/', PlantDataPoints.as_view(), name='generate-plant-report'),
-]
+app.config_from_object('django.conf:settings', namespace='CELERY')
 
-urlpatterns += router.urls
+# Load task modules from all registered Django app configs.
+app.autodiscover_tasks()
+
+
+@app.task(bind=True)
+def debug_task(self):
+    print('Request: {0!r}'.format(self.request))

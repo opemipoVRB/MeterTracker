@@ -6,5 +6,5 @@ from . import models
 
 admin.site.register(models.UserProfile)
 admin.site.register(models.Plant)
-admin.site.register(models.Datapoint)
+admin.site.register(models.DataPoint)
 

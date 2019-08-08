@@ -116,10 +116,24 @@ class Plant(models.Model):
         return self.name
 
 
-class Datapoint(models.Model):
+class DataPoint(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    plant_id = models.ForeignKey(Plant, on_delete=models.CASCADE)
+    plant = models.ForeignKey(Plant, related_name='datapoints', on_delete=models.CASCADE)
     energy_expected = models.FloatField()
     energy_observed = models.FloatField()
     irradiation_expected = models.FloatField()
     irradiation_observed = models.FloatField()
+    datetime = models.DateTimeField()
+
+    def __str__(self):
+        return str(self.id)
+
+
+class DataPoints(object):
+    """
+    Non Model
+
+    """
+    def __init__(self, **kwargs):
+        for field in ('plant', 'date_from', 'date_to'):
+            setattr(self, field, kwargs.get(field, None))
