@@ -13,18 +13,19 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import environ
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+env = environ.Env(
+    NAME=(str, ''),
+    PASSWORD=(str, ''),
+    HOST=(str, ''),
+    PORT=(str, ''),
+    SECRET_KEY=(str, ''),
+    DEBUG=(bool, False),
+)
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'f)%!rs26-=gbzxjvpp#yrdjn&rjt*1-tk-*04gyc86ard5k188'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
+# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Application definition
 
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     'monitor',
+
 ]
 
 MIDDLEWARE = [
@@ -81,15 +83,15 @@ DATABASES = {
 
         'ENGINE': 'django.db.backends.postgresql',
 
-        'NAME': 'postgres',
+        'NAME': env('DB_NAME'),
 
-        'USER': 'postgres',
+        'USER': env('DB_USER'),
 
-        'PASSWORD': 'postgres',
+        'PASSWORD': env('DB_PASSWORD'),
 
-        'HOST': 'localhost',
+        'HOST': env('DB_HOST'),
 
-        'PORT': '5432',
+        'PORT': env('DB_PORT'),
 
     },
 
@@ -133,6 +135,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
+STATIC_ROOT = '/static/'
 STATIC_URL = '/static/'
 
 # Set User Model
