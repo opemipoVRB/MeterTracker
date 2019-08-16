@@ -126,7 +126,7 @@ class DataPoint(models.Model):
     datetime = models.DateTimeField()
 
     def __str__(self):
-        return str(self.id)
+        return "This data point belongs to " + str(self.plant.name)
 
 
 class DataPoints(object):
@@ -134,6 +134,8 @@ class DataPoints(object):
     Non Model
 
     """
+
     def __init__(self, **kwargs):
         for field in ('plant', 'date_from', 'date_to'):
             setattr(self, field, kwargs.get(field, None))
+

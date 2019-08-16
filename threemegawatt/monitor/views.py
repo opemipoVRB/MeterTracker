@@ -1,4 +1,5 @@
 import datetime
+
 from django.utils import timezone
 from rest_framework import generics, status
 from rest_framework.generics import (
@@ -49,7 +50,6 @@ class PlantUpdateView(RetrieveUpdateAPIView):
 
 
 class DataPointMixin(CreateModelMixin):
-
     """
 
     Mixin for bulk create and update operations.
@@ -84,7 +84,7 @@ class DataPointMixin(CreateModelMixin):
                                           irradiation_expected=obj['irradiation_expected'],
                                           irradiation_observed=obj['irradiation_observed'],
                                           datetime=current_timezone.localize(datetime.datetime.strptime(obj['datetime'],
-                                                                             '%Y-%m-%dT%H:%M:%S')),
+                                                                                                        '%Y-%m-%dT%H:%M:%S')),
                                           plant=Plant.objects.get(pk=obj['plant'])
                                           )
                                 )
@@ -97,7 +97,6 @@ class DataPointMixin(CreateModelMixin):
 
 
 class DataSetCreateView(CreateAPIView, DataPointMixin):
-
     """
     Api for Creating Datapoint and Generating Reports
 
@@ -108,7 +107,6 @@ class DataSetCreateView(CreateAPIView, DataPointMixin):
 
 
 class PlantDataPoints(ListAPIView):
-
     """
     Api for Creating Datapoint and Generating Reports
 
@@ -119,5 +117,3 @@ class PlantDataPoints(ListAPIView):
     def get_queryset(self):
         plant = self.kwargs['plant']
         return DataPoint.objects.filter(plant=plant)[:10]
-
-

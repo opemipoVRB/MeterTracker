@@ -72,7 +72,6 @@ def get_data_points(_plant_id, _from_, _to_):
     :param _to_:
     :return:
     """
-    print("Posted Values ", _plant_id, _from_, _to_)
     # put url in env file
     url = "http://localhost:5000/?plant-id=" + _plant_id + "&from=" + _from_ + "&to=" + _to_
     response = requests.get(url).json()
@@ -81,6 +80,13 @@ def get_data_points(_plant_id, _from_, _to_):
 
 
 def format_data_points(_plant_id, datapoints):
+    """
+    This Restructures the dataset to fit datapoint model
+
+    :param _plant_id:
+    :param datapoints:
+    :return:
+    """
     # Using Pandas Dataframe
     df = pd.DataFrame(list(datapoints))
     try:
@@ -115,26 +121,6 @@ def format_data_points(_plant_id, datapoints):
         return None
 
     return clean_data
-
-
-# data_point = format_data_points(plant_id, get_data_points(plant_id, _from_, _to_))
-# print(data_point)
-
-#
-# query = "INSERT INTO `tablename` ( `id`, `energy_expected`, `energy_observed`," \
-#         " `irradiation_expected`, `irradiation_observed`, `date_time`, `plant_id` ) " \
-#         "VALUES ( %(id)s, %(energy_expected)s, %( energy_observed)s, %(irradiation_expected)s, " \
-#         "%( irradiation_observed)s, %(date_time)s, %( plant_id)s )"
-#
-#
-# def bulk_create():
-#     with connection.cursor() as cursor:
-#         cursor.execute(query)
-#
-#     print("We done here..")
-#
-#
-#
 
 
 class DataSetCreateManager:

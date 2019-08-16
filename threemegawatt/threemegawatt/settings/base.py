@@ -13,7 +13,10 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from datetime import timedelta
+
 import environ
+from celery.schedules import crontab
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 env = environ.Env(
@@ -23,6 +26,7 @@ env = environ.Env(
     PORT=(str, ''),
     SECRET_KEY=(str, ''),
     DEBUG=(bool, False),
+    CELERY_BROKER_URL=(str, '')
 )
 
 # environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
@@ -40,6 +44,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'rest_framework.authtoken',
     'monitor',
+    'django_celery_beat',
 
 ]
 
@@ -149,10 +154,21 @@ CORS_ORIGIN_WHITELIST = [
 DATA_UPLOAD_MAX_NUMBER_FIELDS = 102400
 
 # Celery configuration
-CELERY_BROKER_URL = 'redis://{}:{}'.format(os.environ.get('REDIS_HOST'), os.environ.get('REDIS_PORT'))
-CELERY_RESULT_BACKEND = 'redis://{}:{}'.format(os.environ.get('REDIS_HOST'), os.environ.get('REDIS_PORT'))
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'Africa/Lagos'
-# CELERY_BEAT_SCHEDULE = {}
+CELERY_BEAT_SCHEDULE = {
+    'update-datapoints-every-everyday': {
+        'task': 'update-data-points-on-all-plants',
+        # There are 4 ways we can handle time, read further
+        'schedule': crontab(hour=12),
+        # If you're using any arguments
+    },
+}
+
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_SEND_SENT_EVENT = True
+CELERY_SEND_EVENTS = True
+

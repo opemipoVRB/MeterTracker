@@ -48,15 +48,13 @@
 ↓↓←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←↓↓
 """
 
-
-from _future_ import absolute_import, unicode_literals
 import os
 from celery import Celery
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ab_lotto.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'threemegawatt.settings.development')
 
-app = Celery('ab_lotto')
+app = Celery('threemegawatt')
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
